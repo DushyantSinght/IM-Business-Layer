@@ -1,27 +1,66 @@
 package com.inventory.controller;
 
+import com.inventory.model.Product;
 import com.inventory.service.ProductService;
-import com.inventory.Report.InventoryReportService;
 import com.inventory.service.InventoryService;
+import com.inventory.Report.InventoryReportService;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
+@RestController
+@RequestMapping("/api")
 public class Controller {
 
-    ProductService productService = new ProductService();
-    InventoryService inventoryService = new InventoryService();
-    InventoryReportService reportService = new InventoryReportService();
-// I have commented out so, that I can run my files feel free to change and
-// add CRUD methods in their code files and their methods to controller.
+    private final ProductService productService;
+    private final InventoryService inventoryService;
+    private final ReportService reportService;
 
-//    public void addProduct(String name, double price, int quantity){
-//        System.out.println("Controller: Adding product...");
-//        productService.addProduct(name, price, quantity);
-//    }
-//
-//    public void updateStock(int productId, int quantity){
-//        System.out.println("Controller: Updating stock...");
-//        inventoryService.updateStock(productId, quantity);
-//    }
+    public Controller(ProductService productService,
+                      InventoryService inventoryService,
+                      ReportService reportService) {
+        this.productService = productService;
+        this.inventoryService = inventoryService;
+        this.reportService = reportService;
+    }
 
+    // ---------------- PRODUCT ----------------
+
+    @PostMapping("/product")
+    public String addProduct(@RequestBody Product product) {
+        productService.addProduct(product);
+        return "Product added";
+    }
+
+    @GetMapping("/products")
+    public List<Product> getAllProducts() {
+        return productService.getAllProducts();
+    }
+
+    @DeleteMapping("/product/{id}")
+    public String deleteProduct(@PathVariable int id) {
+        productService.deleteProduct(id);
+        return "Deleted";
+    }
+    
+    // ---------------- INVENTORY ----------------
+
+    @PostMapping("/reduce/{id}/{qty}")
+    public String reduceStock(@PathVariable int id,
+                              @PathVariable int qty) {
+        inventoryService.reduceStock(id, qty);
+        return "Stock reduced";
+    }
+
+    @PostMapping("/increase/{id}/{qty}")
+    public String increaseStock(@PathVariable int id,
+                                @PathVariable int qty) {
+        inventoryService.increaseStock(id, qty);
+        return "Stock increased";
+    }
+    
+        // ---------------- REPORT ----------------
+    
     public void generateReport(){
         System.out.println("Controller: Generating report...");
         reportService.checkAndSendLowStockAlert();
