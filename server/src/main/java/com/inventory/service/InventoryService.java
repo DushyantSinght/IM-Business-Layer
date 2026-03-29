@@ -1,20 +1,44 @@
 package com.inventory.service;
 
+import com.inventory.dao.ProductDAO;
+import com.inventory.model.Product;
+import com.inventory.service.validation.InventoryValidator;
+import org.springframework.stereotype.Service;
+
+@Service
 public class InventoryService {
 
-    public void updateStock(int productId, int quantity){
+    private final ProductDAO productDAO;
+    private final InventoryValidator validator;
 
-        if(productId <= 0){
-            System.out.println("Invalid product ID");
-            return;
+    public InventoryService(ProductDAO productDAO, InventoryValidator validator) {
+        this.productDAO = productDAO;
+        this.validator = validator;
+    }
+
+    public void reduceStock(int id, int quantity) {
+
+        validator.validateQuantity(quantity);
+
+        Product product = productDAO.getProductById(id);
+
+        int newStock = product.getStock() - quantity;
+
+        if(newStock < 0) {
+            throw new RuntimeException("Insufficient stock");
         }
 
-        if(quantity < 0){
-            System.out.println("Invalid quantity");
-            return;
-        }
+        productDAO.updateStock(id, newStock);
+    }
 
-        System.out.println("Stock updated for product ID: " + productId);
-        System.out.println("Updated quantity: " + quantity);
+    public void increaseStock(int id, int quantity) {
+
+        validator.validateQuantity(quantity);
+
+        Product product = productDAO.getProductById(id);
+
+        int newStock = product.getStock() + quantity;
+
+        productDAO.updateStock(id, newStock);
     }
 }
