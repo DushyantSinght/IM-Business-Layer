@@ -16,29 +16,50 @@ public class InventoryService {
         this.validator = validator;
     }
 
+    //  Reduce stock
     public void reduceStock(int id, int quantity) {
+
+        System.out.println("[Inventory] Reducing stock | ID: " + id + ", Qty: " + quantity);
 
         validator.validateQuantity(quantity);
 
         Product product = productDAO.getProductById(id);
+
+        validator.validateProductExists(product, id);
+        validator.validateStock(product.getStock(), quantity);
 
         int newStock = product.getStock() - quantity;
 
-        if(newStock < 0) {
-            throw new RuntimeException("Insufficient stock");
-        }
-
         productDAO.updateStock(id, newStock);
+
+        System.out.println("[Inventory] Stock reduced successfully | New Stock: " + newStock);
     }
 
+    //  Increase stock
     public void increaseStock(int id, int quantity) {
+
+        System.out.println("[Inventory] Increasing stock | ID: " + id + ", Qty: " + quantity);
 
         validator.validateQuantity(quantity);
 
         Product product = productDAO.getProductById(id);
+
+        validator.validateProductExists(product, id);
 
         int newStock = product.getStock() + quantity;
 
         productDAO.updateStock(id, newStock);
+
+        System.out.println("[Inventory] Stock increased successfully | New Stock: " + newStock);
+    }
+
+
+    public int getStock(int id) {
+
+        Product product = productDAO.getProductById(id);
+
+        validator.validateProductExists(product, id);
+
+        return product.getStock();
     }
 }
