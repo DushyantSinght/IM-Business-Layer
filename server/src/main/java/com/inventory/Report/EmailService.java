@@ -3,9 +3,10 @@ package com.inventory.Report;
 import jakarta.mail.*;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
+import org.springframework.stereotype.Service;
 
 import java.util.Properties;
-
+@Service
 public class EmailService {
     //Change my email with yours by following the instructions from readme file
     private final String username = "24r25a1224@mlrit.ac.in";  // sender

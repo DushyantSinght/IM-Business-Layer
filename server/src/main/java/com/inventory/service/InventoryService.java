@@ -1,5 +1,6 @@
 package com.inventory.service;
 
+import com.inventory.Report.InventoryReportService;
 import com.inventory.dao.ProductDAO;
 import com.inventory.model.Product;
 import com.inventory.service.validation.InventoryValidator;
@@ -10,10 +11,14 @@ public class InventoryService {
 
     private final ProductDAO productDAO;
     private final InventoryValidator validator;
+    private final InventoryReportService reportService;
 
-    public InventoryService(ProductDAO productDAO, InventoryValidator validator) {
+    public InventoryService(ProductDAO productDAO,
+                            InventoryValidator validator,
+                            InventoryReportService reportService) {
         this.productDAO = productDAO;
         this.validator = validator;
+        this.reportService = reportService;
     }
 
     //  Reduce stock
@@ -33,6 +38,8 @@ public class InventoryService {
         productDAO.updateStock(id, newStock);
 
         System.out.println("[Inventory] Stock reduced successfully | New Stock: " + newStock);
+
+        reportService.checkAndSendLowStockAlert();
     }
 
     //  Increase stock

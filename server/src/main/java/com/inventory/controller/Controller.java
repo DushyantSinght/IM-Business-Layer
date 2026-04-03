@@ -14,11 +14,11 @@ public class Controller {
 
     private final ProductService productService;
     private final InventoryService inventoryService;
-    private final ReportService reportService;
+    private final InventoryReportService reportService;
 
     public Controller(ProductService productService,
                       InventoryService inventoryService,
-                      ReportService reportService) {
+                      InventoryReportService reportService) {
         this.productService = productService;
         this.inventoryService = inventoryService;
         this.reportService = reportService;
@@ -60,9 +60,10 @@ public class Controller {
     }
     
         // ---------------- REPORT ----------------
-    
-    public void generateReport(){
+    @GetMapping("/report")
+    public String generateReport(){
         System.out.println("Controller: Generating report...");
         reportService.checkAndSendLowStockAlert();
+        return "Report generated - check your email";
     }
 }

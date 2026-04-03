@@ -1,8 +1,10 @@
 package com.inventory.Report;
 import com.database.DatabaseConnection;
+import org.springframework.stereotype.Service;
+
 import java.sql.*;
 import java.util.*;
-
+@Service
 public class InventoryReportService {
     public void checkAndSendLowStockAlert(){
         try {
@@ -22,7 +24,7 @@ public class InventoryReportService {
                 System.out.println(id + " | " + name + " | " + quantity + " | " + price + " | " + minQty);
 
                 // collect products that are below minimum quantity
-                if (quantity <= minQty) {
+                if (quantity < minQty) {
                     lowStockLines.add(
                             String.format("  - %s (ID: %d) | Stock: %d | Min required: %d | Price: %.2f",
                                     name, id, quantity, minQty, price)
@@ -42,7 +44,7 @@ public class InventoryReportService {
         }
     }
 
-    private static void sendLowStockAlert(List<String> lowStockLines) {
+    private void sendLowStockAlert(List<String> lowStockLines) {
         EmailService emailService = new EmailService();
 
         String subject = "LOW STOCK ALERT — Action Required";
