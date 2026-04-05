@@ -67,7 +67,7 @@ public class InventoryReportService {
         body.append("-- Inventory System");
 
         emailService.sendEmail(
-                "bhargavkallepally9@gmail.com",   // ← Change this email to get message to your email
+                "",   // ← Change this email to get message to your email
                 subject,
                 body.toString()
         );
