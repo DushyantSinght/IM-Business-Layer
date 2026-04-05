@@ -1,38 +1,46 @@
 package com.inventory.Report;
 import com.database.DatabaseConnection;
+import com.inventory.dao.ProductDAO;
+import com.inventory.model.Product;
 import org.springframework.stereotype.Service;
 
 import java.sql.*;
 import java.util.*;
 @Service
 public class InventoryReportService {
+
+    private final ProductDAO productDAO;
+
+    public InventoryReportService(ProductDAO productDAO) {
+        this.productDAO = productDAO;
+    }
     public void checkAndSendLowStockAlert(){
         try {
-            Connection conn = DatabaseConnection.getConnection();
-            Statement stmt = conn.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT * FROM inventory");
-
+            List<Product> allProducts = productDAO.getAllProducts();
             List<String> lowStockLines = new ArrayList<>();
 
-            while (rs.next()) {
-                int id           = rs.getInt("id");
-                String name      = rs.getString("productname");
-                int quantity     = rs.getInt("productquantity");
-                double price     = rs.getDouble("price");
-                int minQty       = rs.getInt("minquantity");
-
-                System.out.println(id + " | " + name + " | " + quantity + " | " + price + " | " + minQty);
-
-                // collect products that are below minimum quantity
-                if (quantity < minQty) {
+            for(Product product : allProducts){
+                System.out.println(
+                        product.getId() +"|"+
+                        product.getName()+"|"+
+                        product.getStock()+"|"+
+                        product.getPrice()+"|"+
+                        product.getMinQuantity()
+                );
+                if(product.getStock() < product.getPrice()){
                     lowStockLines.add(
-                            String.format("  - %s (ID: %d) | Stock: %d | Min required: %d | Price: %.2f",
-                                    name, id, quantity, minQty, price)
+                            String.format(" - s% (ID: %d) | Category: %s | Stock: %d | Min: %d | Price: %2f",
+                                    product.getName(),
+                                    product.getId(),
+                                    product.getCategory(),
+                                    product.getStock(),
+                                    product.getMinQuantity(),
+                                    product.getPrice())
                     );
                 }
-            }
+        }
 
-            // only send email if there are low stock items
+            // only sends email if there are low stock items
             if (!lowStockLines.isEmpty()) {
                 sendLowStockAlert(lowStockLines);
             } else {

@@ -34,7 +34,8 @@ public class ProductDAO {
                         rs.getString("name"),
                         rs.getDouble("price"),
                         rs.getInt("stock"),
-                        rs.getString("category")
+                        rs.getString("category"),
+                        rs.getInt("minQuantity")
                 ));
     }
 
@@ -47,7 +48,8 @@ public class ProductDAO {
                         rs.getString("name"),
                         rs.getDouble("price"),
                         rs.getInt("stock"),
-                        rs.getString("category")
+                        rs.getString("category"),
+                        rs.getInt("minQuantity")
                 ),
                 id);
     }

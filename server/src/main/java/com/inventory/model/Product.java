@@ -7,15 +7,17 @@ public class Product {
     private double price;
     private int stock;
     private String category;
+    private int minQuantity;
 
     public Product() {}
 
-    public Product(int id, String name, double price, int stock, String category,) {
+    public Product(int id, String name, double price, int stock, String category,int minQuantity) {
         this.id = id;
         this.name = name;
         this.price = price;
         this.stock = stock;
         this.category = category;
+        this.minQuantity = minQuantity;
 
     }
 
@@ -40,4 +42,7 @@ public class Product {
 
     public String getCategory() { return category; }
     public void setCategory(String category) { this.category = category; }
+
+    public int getMinQuantity() { return minQuantity; }
+    public void setMinQuantity(int minQuantity) { this.minQuantity = minQuantity; }
 }

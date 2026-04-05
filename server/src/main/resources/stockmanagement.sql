@@ -22,12 +22,13 @@
 DROP TABLE IF EXISTS `inventory`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `inventory` (
+CREATE TABLE `products` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `productname` varchar(100) DEFAULT NULL,
-  `productquantity` int DEFAULT NULL,
+  `name` varchar(100) DEFAULT NULL,
   `price` double DEFAULT NULL,
-  `minquantity` int DEFAULT '10',
+  `stock` int DEFAULT NULL,
+  `category` varchar(100) DEFAULT NULL,
+  `minQuantity` int DEFAULT '10',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -38,7 +39,7 @@ CREATE TABLE `inventory` (
 
 LOCK TABLES `inventory` WRITE;
 /*!40000 ALTER TABLE `inventory` DISABLE KEYS */;
-INSERT INTO `inventory` VALUES (1,'Laptop',15,50000,10),(2,'Mouse',5,500,10),(3,'Keyboard',8,1500,10),(4,'Speaker',2,500,10),(5,'Printer',5,1500,10),(6,'Headphones',3,800,10);
+INSERT INTO `inventory` VALUES (1,'Laptop',50000,15,'Electronics',10),(2,'Mouse',500,5,'Accessories',10),(3,'Keyboard',1500,8,'Accessories',10),(4,'Speaker',500,2,'Electronics',10),(5,'Printer',1500,5,'Electronics',10),(6,'Headphones',800,3,'Accessories',10);
 /*!40000 ALTER TABLE `inventory` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -51,4 +52,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-03-29 16:14:32
+-- Dump completed on 2026-04-05 15:29:51
