@@ -10,7 +10,7 @@ import java.util.Properties;
 public class EmailService {
     //Change my email with yours by following the instructions from readme file
     private final String username = "24r25a1224@mlrit.ac.in";  // sender
-    private final String password = "zexpqqdgshszgkab";         // Gmail App Password
+    private final String password = "ejltovjpujaerwik";         // Gmail App Password
     private Session buildSession() {
         Properties props = new Properties();
         props.put("mail.smtp.host",                "smtp.gmail.com");

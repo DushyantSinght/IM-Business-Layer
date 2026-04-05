@@ -27,9 +27,9 @@ public class InventoryReportService {
                         product.getPrice()+"|"+
                         product.getMinQuantity()
                 );
-                if(product.getStock() < product.getPrice()){
+                if(product.getStock() < product.getMinQuantity()){
                     lowStockLines.add(
-                            String.format(" - s% (ID: %d) | Category: %s | Stock: %d | Min: %d | Price: %2f",
+                            String.format(" - %s (ID: %d) | Category: %s | Stock: %d | Min: %d | Price: %.2f",
                                     product.getName(),
                                     product.getId(),
                                     product.getCategory(),
