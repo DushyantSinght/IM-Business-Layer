@@ -29,6 +29,7 @@
 ---
 
 ## 🗂️ Project Structure
+```
 
 IM-Business-Layer/
 ├── server/
@@ -57,7 +58,7 @@ IM-Business-Layer/
 ├── img_2.png
 ├── LICENSE
 └── README.md
-
+```
 ---
 
 ## ⚙️ Setup Guide
