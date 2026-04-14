@@ -1,66 +1,100 @@
 package com.inventory.dao;
 
-import com.inventory.model.Product;
-import org.springframework.jdbc.core.JdbcTemplate;
+import com.inventory.database_system.entity.Product;
+import com.inventory.database_system.repository.ProductRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class ProductDAO {
 
-    private final JdbcTemplate jdbcTemplate;
+    private final ProductRepository productRepository;
 
-    public ProductDAO(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
+    public ProductDAO(ProductRepository productRepository) {
+        this.productRepository = productRepository;
     }
+
+    // ── CREATE ───────────────────────────────────────────────────────────────
 
     public void addProduct(Product product) {
-        String sql = "INSERT INTO products(name,price,stock,category) VALUES(?,?,?,?)";
-
-        jdbcTemplate.update(sql,
-                product.getName(),
-                product.getPrice(),
-                product.getStock(),
-                product.getCategory());
+        productRepository.save(product);
     }
+
+    // ── READ ─────────────────────────────────────────────────────────────────
 
     public List<Product> getAllProducts() {
-        String sql = "SELECT * FROM products";
-
-        return jdbcTemplate.query(sql, (rs, rowNum) ->
-                new Product(
-                        rs.getInt("id"),
-                        rs.getString("name"),
-                        rs.getDouble("price"),
-                        rs.getInt("stock"),
-                        rs.getString("category"),
-                        rs.getInt("minQuantity")
-                ));
+        return productRepository.findAll();
     }
 
-    public Product getProductById(int id) {
-        String sql = "SELECT * FROM products WHERE id=?";
-
-        return jdbcTemplate.queryForObject(sql,
-                (rs, rowNum) -> new Product(
-                        rs.getInt("id"),
-                        rs.getString("name"),
-                        rs.getDouble("price"),
-                        rs.getInt("stock"),
-                        rs.getString("category"),
-                        rs.getInt("minQuantity")
-                ),
-                id);
+    /**
+     * Replaces old: getProductById(int id)
+     * Now returns Optional — callers must handle not-found case.
+     */
+    public Product getProductById(Long id) {
+        return productRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Product not found with id: " + id));
     }
 
-    public void updateStock(int id, int stock) {
-        String sql = "UPDATE products SET stock=? WHERE id=?";
-        jdbcTemplate.update(sql, stock, id);
+    public Optional<Product> findBySku(String sku) {
+        return productRepository.findBySku(sku);
     }
 
-    public void deleteProduct(int id) {
-        String sql = "DELETE FROM products WHERE id=?";
-        jdbcTemplate.update(sql, id);
+    public boolean existsBySku(String sku) {
+        return productRepository.existsBySku(sku);
+    }
+
+    public List<Product> getActiveProducts() {
+        return productRepository.findByActiveTrue();
+    }
+
+    public List<Product> getProductsByCategory(Long categoryId) {
+        return productRepository.findByCategoryId(categoryId);
+    }
+
+    public List<Product> getProductsBySupplier(Long supplierId) {
+        return productRepository.findBySupplierId(supplierId);
+    }
+
+    public List<Product> searchByName(String name) {
+        return productRepository.findByNameContainingIgnoreCase(name);
+    }
+
+    /**
+     * Replaces old raw SQL low-stock query.
+     * Fetches products whose quantity <= their own reorderLevel.
+     * Pass product.getReorderLevel() or a fixed threshold.
+     */
+    public List<Product> getLowStockProducts(Integer threshold) {
+        return productRepository.findByQuantityLessThanEqual(threshold);
+    }
+
+    // ── UPDATE ───────────────────────────────────────────────────────────────
+
+    /**
+     * Replaces old: updateStock(int id, int stock)
+     * Now operates on the `quantity` field (renamed from `stock`).
+     */
+    public void updateStock(Long id, int quantity) {
+        Product product = getProductById(id);
+        product.setQuantity(quantity);
+        productRepository.save(product);
+    }
+
+    // ── DELETE ───────────────────────────────────────────────────────────────
+
+    public void deleteProduct(Long id) {
+        productRepository.deleteById(id);
+    }
+
+    /**
+     * Soft delete — marks product inactive instead of removing from DB.
+     * Preferred over deleteProduct() to preserve transaction history.
+     */
+    public void deactivateProduct(Long id) {
+        Product product = getProductById(id);
+        product.setActive(false);
+        productRepository.save(product);
     }
 }
