@@ -1,8 +1,8 @@
 package com.inventory.service;
 
-import com.inventory.Report.InventoryReportService;
 import com.inventory.dao.ProductDAO;
-import com.inventory.model.Product;
+import com.inventory.database_system.entity.Product;
+import com.inventory.Report.InventoryReportService;
 import com.inventory.service.validation.InventoryValidator;
 import org.springframework.stereotype.Service;
 
@@ -21,8 +21,9 @@ public class InventoryService {
         this.reportService = reportService;
     }
 
-    //  Reduce stock
-    public void reduceStock(int id, int quantity) {
+    // id type changed: int → Long
+    // field renamed: stock → quantity
+    public void reduceStock(Long id, int quantity) {
 
         System.out.println("[Inventory] Reducing stock | ID: " + id + ", Qty: " + quantity);
 
@@ -30,20 +31,21 @@ public class InventoryService {
 
         Product product = productDAO.getProductById(id);
 
-        validator.validateProductExists(product, id);
-        validator.validateStock(product.getStock(), quantity);
+        validator.validateProductExists(product, id.intValue());
+        validator.validateStock(product.getQuantity(), quantity);   // was: getStock()
 
-        int newStock = product.getStock() - quantity;
+        int newQuantity = product.getQuantity() - quantity;         // was: getStock()
 
-        productDAO.updateStock(id, newStock);
+        productDAO.updateStock(id, newQuantity);
 
-        System.out.println("[Inventory] Stock reduced successfully | New Stock: " + newStock);
+        System.out.println("[Inventory] Stock reduced successfully | New Quantity: " + newQuantity);
 
         reportService.checkAndSendLowStockAlert();
     }
 
-    //  Increase stock
-    public void increaseStock(int id, int quantity) {
+    // id type changed: int → Long
+    // field renamed: stock → quantity
+    public void increaseStock(Long id, int quantity) {
 
         System.out.println("[Inventory] Increasing stock | ID: " + id + ", Qty: " + quantity);
 
@@ -51,22 +53,21 @@ public class InventoryService {
 
         Product product = productDAO.getProductById(id);
 
-        validator.validateProductExists(product, id);
+        validator.validateProductExists(product, id.intValue());
 
-        int newStock = product.getStock() + quantity;
+        int newQuantity = product.getQuantity() + quantity;         // was: getStock()
 
-        productDAO.updateStock(id, newStock);
+        productDAO.updateStock(id, newQuantity);
 
-        System.out.println("[Inventory] Stock increased successfully | New Stock: " + newStock);
+        System.out.println("[Inventory] Stock increased successfully | New Quantity: " + newQuantity);
     }
 
-
-    public int getStock(int id) {
+    public int getStock(Long id) {
 
         Product product = productDAO.getProductById(id);
 
-        validator.validateProductExists(product, id);
+        validator.validateProductExists(product, id.intValue());
 
-        return product.getStock();
+        return product.getQuantity();                                // was: getStock()
     }
 }
