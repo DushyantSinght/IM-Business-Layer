@@ -1,7 +1,7 @@
 package com.inventory.service;
 
 import com.inventory.dao.ProductDAO;
-import com.inventory.model.Product;
+import com.inventory.database_system.entity.Product;
 import com.inventory.service.validation.ProductValidator;
 import org.springframework.stereotype.Service;
 
@@ -27,11 +27,33 @@ public class ProductService {
         return productDAO.getAllProducts();
     }
 
-    public void deleteProduct(int id) {
+    public List<Product> getActiveProducts() {
+        return productDAO.getActiveProducts();
+    }
+
+    // id type changed: int → Long
+    public Product getProduct(Long id) {
+        return productDAO.getProductById(id);
+    }
+
+    public List<Product> searchByName(String name) {
+        return productDAO.searchByName(name);
+    }
+
+    public List<Product> getProductsByCategory(Long categoryId) {
+        return productDAO.getProductsByCategory(categoryId);
+    }
+
+    public List<Product> getProductsBySupplier(Long supplierId) {
+        return productDAO.getProductsBySupplier(supplierId);
+    }
+
+    // id type changed: int → Long
+    public void deleteProduct(Long id) {
         productDAO.deleteProduct(id);
     }
 
-    public Product getProduct(int id) {
-        return productDAO.getProductById(id);
+    public void deactivateProduct(Long id) {
+        productDAO.deactivateProduct(id);
     }
 }
