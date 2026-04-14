@@ -1,20 +1,18 @@
 package com.inventory.server;
-import com.inventory.controller.Controller;
+
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.stereotype.Component;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
-// Here, The controller's methods should be mentioned to run the project.
-// Main file to run the project.
 @SpringBootApplication
-@ComponentScan(basePackages = "com.inventory")
+@ComponentScan(basePackages = {"com.inventory", "com.database"})
+@EntityScan(basePackages = "com.inventory.database_system.entity")
+@EnableJpaRepositories(basePackages = "com.inventory.database_system.repository")
 public class ServerApplication {
 
-	public static void main(String[] args) {
-
-		SpringApplication.run(ServerApplication.class, args);
-
-
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(ServerApplication.class, args);
+    }
 }
