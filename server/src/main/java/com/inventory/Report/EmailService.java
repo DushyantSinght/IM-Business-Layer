@@ -9,12 +9,9 @@ import java.util.Properties;
 @Service
 public class EmailService {
     //Change my email with yours by following the instructions from readme file
-    private final String username = "";  // sender
-    private final String password = "";         // Gmail App Password
-    //To get password go to 2-step verification and enable it
-    //Scroll down and you will get add password and click on create
-    //Enter any username and it will generate a password and copy it and paste it in password section
-    //paste it without any spaces
+    private final String username = "24r25a1224@mlrit.ac.in";  // sender
+    private final String password = "ejltovjpujaerwik";         // Gmail App Password
+
     private Session buildSession() {
         Properties props = new Properties();
         props.put("mail.smtp.host",                "smtp.gmail.com");
